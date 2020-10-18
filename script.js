@@ -1,35 +1,61 @@
+// assign DOM objects to variables
+const quoteContainer = document.querySelector("#quote-container");
+const quoteText = document.querySelector("#quote");
+const authorText = document.querySelector("#author");
+const twitterButton = document.querySelector("#twitter");
+const newQuoteBtn = document.querySelector("#new-quote");
+
+// assign getQuote method to click of "New Quote" button
+newQuoteBtn.addEventListener("click",getQuote);
+twitterButton.addEventListener("click",tweetQuote);
 // Get Quote From API
 async function getQuote(){
+    // proxy server which allows me to chain url's to get quote
     const proxyURL = 'https://afternoon-cliffs-29592.herokuapp.com/'
+    // actual quote api url
     const apiURL = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
 
     try {
+        // fetch a quote from api
         const response = await fetch(proxyURL + apiURL);
+        // wait for the response and assign json object to "data"
         const data = await response.json();
-        // console.log(data);
+        // extract quoteText and quoteAuthor from "data" json object
+        // and call updatePageQuote to update the DOM
         updatePageQuote(data.quoteText, data.quoteAuthor);
     }catch (error){
+        // if error give message and error at console
         console.log('whoops, no quote', error);
     }
     
 }
 
-const updatePageQuote = (quoteText, quoteAuthor) =>{
-    // console.log(quoteText,quoteAuthor);
-    const author = quoteAuthor;
-    const quote = quoteText;
+// update the DOM with the new quote and author text
+const updatePageQuote = (quote, author) =>{
+    
+    // if quote is longer than 120 characters,
+    // reduce size of font on quote-text by adding 'long-quote' style class,
+    // otherwise remove the the 'long-quote' class from quote-text object
+    if(quote.length >= 120){
+        quoteText.classList.add('long-quote');
+    }
+    else{
+        quoteText.classList.remove('long-quote');
+    }
 
-    document.querySelector("#quote").innerHTML = quoteText;
-    document.querySelector("#author").innerHTML = quoteAuthor;
+    quoteText.innerText = quote;
+    // if there is no author for quote
+    authorText.innerText = (author.length == 0) ? "Unknown" : author;
 
 }
 
-// Initialize variables
-const button = document.querySelector("#new-quote");
-const twitterButton = document.querySelector("twitter-button");
+function tweetQuote(){
+    const quote = quoteText.innerText;
+    const author = authorText.innerText;
+    const twitterURL = `https://twitter.com/intent/tweet?text=${quote} - ${author}`;
+    window.open(twitterURL, '_blank');
+}
 
-// initialize callback function to button
-button.addEventListener("click",getQuote);
 // On Load
 getQuote();
 
