@@ -7,11 +7,11 @@ const newQuoteBtn = document.querySelector("#new-quote");
 const loader = document.querySelector("#loader");
 
 // assign getQuote method to click of "New Quote" button
-newQuoteBtn.addEventListener("click",getQuote);
+newQuoteBtn.addEventListener("click",getQuoteFromApi);
 twitterButton.addEventListener("click",tweetQuote);
 
-// Get Quote From API
-async function getQuote(){
+
+async function getQuoteFromApi(){
     // proxy server which allows me to chain url's to get quote
     const proxyURL = 'https://afternoon-cliffs-29592.herokuapp.com/'
     // actual quote api url
@@ -19,23 +19,18 @@ async function getQuote(){
 
     try {
         
-        // while waiting for quote fetch show loader element,
-        // and hide quoteContainer
-        quoteContainer.hidden = true;
-        loader.hidden = false;
+        showLoadingSpinner();
 
         const response = await fetch(proxyURL + apiURL);
         // wait for the response and assign json object to "data"
         const data = await response.json();
         
-
-        // hide loader, show quoteContainer
-        loader.hidden = true;
-        quoteContainer.hidden = false;
+        removeLoadingSpinner();
 
         // pass quoteText and quoteAuthor from "data" json object
         // to updatePageQuote to update the DOM
         updatePageQuote(data.quoteText, data.quoteAuthor);
+
     }catch (error){
         // if error give message and error at console
         console.log('whoops, no quote', error);
@@ -43,7 +38,6 @@ async function getQuote(){
     
 }
 
-// update the DOM with the new quote and author text
 const updatePageQuote = (quote, author) =>{
     
     // if quote is longer than 120 characters,
@@ -62,6 +56,16 @@ const updatePageQuote = (quote, author) =>{
 
 }
 
+function removeLoadingSpinner() {
+    loader.hidden = true;
+    quoteContainer.hidden = false;
+}
+
+function showLoadingSpinner() {
+    quoteContainer.hidden = true;
+    loader.hidden = false;
+}
+
 function tweetQuote(){
     const quote = quoteText.innerText;
     const author = authorText.innerText;
@@ -70,5 +74,5 @@ function tweetQuote(){
 }
 
 // On Load
-getQuote();
+getQuoteFromApi();
 
