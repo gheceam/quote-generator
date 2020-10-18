@@ -4,10 +4,12 @@ const quoteText = document.querySelector("#quote");
 const authorText = document.querySelector("#author");
 const twitterButton = document.querySelector("#twitter");
 const newQuoteBtn = document.querySelector("#new-quote");
+const loader = document.querySelector("#loader");
 
 // assign getQuote method to click of "New Quote" button
 newQuoteBtn.addEventListener("click",getQuote);
 twitterButton.addEventListener("click",tweetQuote);
+
 // Get Quote From API
 async function getQuote(){
     // proxy server which allows me to chain url's to get quote
@@ -16,12 +18,23 @@ async function getQuote(){
     const apiURL = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
 
     try {
-        // fetch a quote from api
+        
+        // while waiting for quote fetch show loader element,
+        // and hide quoteContainer
+        quoteContainer.hidden = true;
+        loader.hidden = false;
+
         const response = await fetch(proxyURL + apiURL);
         // wait for the response and assign json object to "data"
         const data = await response.json();
-        // extract quoteText and quoteAuthor from "data" json object
-        // and call updatePageQuote to update the DOM
+        
+
+        // hide loader, show quoteContainer
+        loader.hidden = true;
+        quoteContainer.hidden = false;
+
+        // pass quoteText and quoteAuthor from "data" json object
+        // to updatePageQuote to update the DOM
         updatePageQuote(data.quoteText, data.quoteAuthor);
     }catch (error){
         // if error give message and error at console
