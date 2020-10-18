@@ -6,7 +6,7 @@ const twitterButton = document.querySelector("#twitter");
 const newQuoteBtn = document.querySelector("#new-quote");
 const loader = document.querySelector("#loader");
 
-// assign getQuote method to click of "New Quote" button
+
 newQuoteBtn.addEventListener("click",getQuoteFromApi);
 twitterButton.addEventListener("click",tweetQuote);
 
