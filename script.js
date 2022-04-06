@@ -12,7 +12,7 @@ twitterButton.addEventListener("click",tweetQuote);
 
 
 async function getQuoteFromApi(){
-    // proxy server which allows me to chain url's to get quote
+    // proxy server allowing the chaining of url's
     const proxyURL = 'https://afternoon-cliffs-29592.herokuapp.com/'
     // actual quote api url
     const apiURL = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
